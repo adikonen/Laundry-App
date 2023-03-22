@@ -1,0 +1,29 @@
+#app > div {
+  background-color: whitesmoke;
+}
+
+.router-view-wrapper {
+  position:relative;
+  top:4.5rem;
+  padding:1rem;
+  z-index: 99;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.full-btn {
+  width: 100%;
+  margin-bottom:0.2rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+.dual-input {
+  display:flex;
+  gap: 1rem;
+}
