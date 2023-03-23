@@ -1,9 +1,9 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { useClothes } from '@/stores/clothes';
-
+import ThreeDot from '../../components/ThreeDot.vue';
 const store = useClothes()
-console.log(store.clothes)
+console.table(store.clothes.map(item => ({clothes_id: item.clothes_id})))
 </script>
 
 <template>
@@ -15,13 +15,20 @@ console.log(store.clothes)
   </RouterLink>
   <v-divider></v-divider>
   <v-list lines="two">
-    <v-list-item
-      v-for="item in store.clothes"
-      :key="item.title"
-      :title="item.title"
-      :subtitle="item.description"
-      bg-color="red"
-    ></v-list-item>
+    <template 
+    v-for="(item, index) in store.clothes"
+    :key="item.clothes_id"
+    >
+    <v-list-item  
+    :title="item.title"
+    :subtitle="item.description"
+    bg-color="red"
+    >
+      <template v-slot:append>
+          <ThreeDot @handle-delete="() => store.deleteClothes(item.clothes_id)" :edit_link="{name: 'clothes.edit', params: {clothes_id: item.clothes_id}}"></ThreeDot>
+        </template>
+      </v-list-item>
+    </template>
   </v-list>
 </template>
 

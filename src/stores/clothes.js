@@ -1,13 +1,15 @@
-import { computed, reactive, ref, watch } from "vue"
+import { computed, reactive, ref } from "vue"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 import { useRouter } from "vue-router"
-
+import { nanoid } from 'nanoid'
+import { useRoute } from 'vue-router'
 export const useClothes = defineStore('clothes', () => {
   const clothes_json = useStorage('clothes', [])
   
   const router = useRouter()
   const loading = ref(false)
+  const route = useRoute()
 
   const form = reactive({
     name: '',
@@ -15,9 +17,6 @@ export const useClothes = defineStore('clothes', () => {
     forPerson: '',
     perPcs:1,
     type: 1,
-    // cost_format: '',
-    // description: '',
-    // title: ''
   })
 
   async function storeClothes() {
@@ -28,21 +27,15 @@ export const useClothes = defineStore('clothes', () => {
 
     loading.value = true
 
-    const json = JSON.stringify({
-      name: form.name,
-      cost: form.cost,
-      image: form.image,
-      perPcs: form.perPcs,
-      forPerson: form.forPerson,
-      cost_format: '',
-      description: '',
-      title: ''
-    })
+    if(_validate()) {
+      return
+    }
+
+    const json = _makeJson()
 
     clothes_json.value.push(json)
     loading.value = false
 
-    // i dont know why it cannot redirect, help 
     router.push({name: 'clothes.index'})
   }
 
@@ -54,21 +47,84 @@ export const useClothes = defineStore('clothes', () => {
     form.type = 1
   }
 
-  const clothes = computed(() => {
-    return clothes_json.value.map((item) => {
-      const data = JSON.parse(item)
-      data.cost_format = `${data.cost} ribu`
-      data.description = `${data.cost_format} / ${data.perPcs} pcs` 
-      data.title = `${data.name} ${data.forPerson}`
+  function findClothes(clothes_id) {
+    const data = clothes.value.find((item) => item.clothes_id == clothes_id)
+    for (let item in data) {
+      form[item] = data[item]
+    }
+    return data
+  }
 
-      return data
-    })
-  })
+  function updateClothes(clothes_id) {
+    if (loading.value) {
+      console.warn('Be patient....')
+      return 
+    }
 
-  // watch(() => form.cost, (newv, oldv) => {
-  //   form.cost_format = newv + ' ribu'
-  //   form.description = `${form.cost_format} / ${form.perPcs} biji`
-  // })
+    loading.value = true
 
-  return { form, clothes_json, clothes, storeClothes, resetForm }
+    if (_validate()) {
+      return 
+    }
+
+    const json = _makeJson(true)
+    const index = clothes.value.findIndex((item) => item.clothes_id === clothes_id)
+
+    if (index != -1) {
+      clothes_json.value[index] = json
+    }
+    
+    loading.value = false
+
+    router.push({name: 'clothes.index'})
+  }
+
+  function deleteClothes(clothes_id) {
+    const isYes = confirm('Apakah ingin menghapus pakaian ini?')
+
+    if (isYes) {
+      const index = clothes.value.findIndex((item) => item.clothes_id === clothes_id)
+      if (index!=-1) {
+        clothes_json.value.splice(index,1)
+      }
+    }
+
+  }
+
+  function _getTypeName(type_num) {
+    if (type_num == 1) {
+      return 'Laundry'
+    }
+
+    return 'Setrikaan'
+  }
+
+  function _validate() {
+    if (form.name == '') {
+      alert('Kolom nama pakaian diperlukan')
+      return true
+    }
+
+    return false
+  }
+
+  function _makeJson(isEdit = false) {
+    const data = {
+      name: form.name,
+      cost: form.cost,
+      image: form.image,
+      perPcs: form.perPcs,
+      forPerson: form.forPerson,
+      cost_format: `${form.cost} ribu`, 
+      description: `${form.cost} ribu / ${form.perPcs} pcs`,
+      title: `${form.name} (${_getTypeName(form.type)}) ${form.forPerson}`
+    }
+
+    data.clothes_id = isEdit ? route.params.clothes_id : nanoid(16); 
+    return JSON.stringify(data);
+  }
+
+  const clothes = computed(() => clothes_json.value.map((item) => JSON.parse(item)))
+
+  return { form, clothes_json, clothes, findClothes, storeClothes, resetForm, updateClothes, deleteClothes }
 })

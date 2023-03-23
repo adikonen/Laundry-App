@@ -1,15 +1,18 @@
 <script setup>
-import { onBeforeUnmount } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
 import { useClothes } from '@/stores/clothes'
+import { useRoute } from 'vue-router'
+const route = useRoute()
 const store = useClothes()
 
+onMounted(() => store.findClothes(route.params.clothes_id))
 onBeforeUnmount(store.resetForm)
 
 </script>
 
 <template>
-  <v-form @submit.prevent="store.storeClothes">
-    <h4 class="title">Buat Jenis Pakaian</h4>
+  <v-form @submit.prevent="store.updateClothes(route.params.clothes_id)">
+    <h4 class="title">Edit Jenis Pakaian</h4>
     <v-text-field label="Nama Pakaian" v-model="store.form.name" :rules="[v => !!v || 'Kolom nama diperlukan']" autofocus></v-text-field>
     <v-text-field label="Khusus Untuk (Tidak wajib)" v-model="store.form.forPerson" required></v-text-field>
     <div class="dual-input">
@@ -20,8 +23,8 @@ onBeforeUnmount(store.resetForm)
       <v-radio name="active" label="Laundry" :value="1" color="teal"></v-radio>
       <v-radio name="active" label="Setrikaan" :value="2" color="teal"></v-radio>
     </v-radio-group>
-    <v-btn value="Tambah Pakaian" class="full-btn" color="teal" @click="store.storeClothes">
-      Tambah Pakian
+    <v-btn value="Ubah Pakaian" class="full-btn" color="teal" @click="store.updateClothes(route.params.clothes_id)">
+      Ubah Pakian
     </v-btn>
   </v-form>
 </template>

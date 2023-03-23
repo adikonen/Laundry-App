@@ -12,6 +12,11 @@ const router = createRouter({
       path: '/',
       name: 'clothes.index',
       component: () => import('@/views/Clothes/IndexView.vue')
+    },
+    {
+      path: '/clothes/:clothes_id/edit',
+      name: 'clothes.edit',
+      component: () => import('@/views/Clothes/EditView.vue')
     }
   ]
 })
