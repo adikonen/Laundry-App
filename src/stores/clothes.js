@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from "vue"
+import { computed, reactive, ref, watch } from "vue"
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
 import { useRouter } from "vue-router"
@@ -6,10 +6,11 @@ import { nanoid } from 'nanoid'
 import { useRoute } from 'vue-router'
 export const useClothes = defineStore('clothes', () => {
   const clothes_json = useStorage('clothes', [])
-  
   const router = useRouter()
   const loading = ref(false)
   const route = useRoute()
+  const search = ref('')
+  const temp_json = clothes_json.value
 
   const form = reactive({
     name: '',
@@ -45,6 +46,9 @@ export const useClothes = defineStore('clothes', () => {
     form.forPerson = ''
     form.perPcs = 1
     form.type = 1
+    search.value = ''
+    
+    clothes_json.value = temp_json
   }
 
   function findClothes(clothes_id) {
@@ -126,5 +130,23 @@ export const useClothes = defineStore('clothes', () => {
 
   const clothes = computed(() => clothes_json.value.map((item) => JSON.parse(item)))
 
-  return { form, clothes_json, clothes, findClothes, storeClothes, resetForm, updateClothes, deleteClothes }
+  watch(search, (newv, oldv) => {
+    if (newv.length > 0) {
+      clothes_json.value = clothes.value.filter((item) => item.title.indexOf(newv) != -1).map((item) => JSON.stringify(item))
+    } else {
+      clothes_json.value = temp_json
+    }
+  })
+
+  return {
+    form,
+    clothes_json,
+    clothes,
+    search, 
+    findClothes, 
+    storeClothes, 
+    resetForm, 
+    updateClothes, 
+    deleteClothes 
+  }
 })

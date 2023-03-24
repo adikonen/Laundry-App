@@ -16,7 +16,7 @@ const emit = defineEmits(['handle-delete'])
       <RouterLink :to="edit_link">
       <p>
          Edit
-        </p>
+      </p>
       </RouterLink>
       <p @click="$emit('handle-delete')">
         Hapus
@@ -37,7 +37,7 @@ const emit = defineEmits(['handle-delete'])
     padding:0.5rem 1rem;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
     position:absolute;
-    z-index: 10000000;
+    z-index: 3;
     top:0;
     left:-3.8rem;
     background-color: white;

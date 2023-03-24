@@ -14,7 +14,7 @@ onBeforeUnmount(store.resetForm)
   <v-form @submit.prevent="store.updateClothes(route.params.clothes_id)">
     <h4 class="title">Edit Jenis Pakaian</h4>
     <v-text-field label="Nama Pakaian" v-model="store.form.name" :rules="[v => !!v || 'Kolom nama diperlukan']" autofocus></v-text-field>
-    <v-text-field label="Khusus Untuk (Tidak wajib)" v-model="store.form.forPerson" required></v-text-field>
+    <v-text-field label="Khusus Untuk (Tidak wajib)" v-model="store.form.forPerson"></v-text-field>
     <div class="dual-input">
       <v-text-field label="Harga (ribu)" type="number" v-model="store.form.cost"></v-text-field>
       <v-text-field label="Perpcs" type="number" v-model="store.form.perPcs"></v-text-field>
