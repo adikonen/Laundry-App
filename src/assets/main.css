@@ -3,9 +3,9 @@
 }
 
 .router-view-wrapper {
-  position:relative;
-  top:4.5rem;
-  padding:1rem;
+  position: relative;
+  top: 4.5rem;
+  padding: 1rem;
   z-index: 99;
 }
 
@@ -16,7 +16,7 @@
 
 .full-btn {
   width: 100%;
-  margin-bottom:0.2rem;
+  margin-bottom: 0.2rem;
 }
 
 a {
@@ -24,6 +24,6 @@ a {
 }
 
 .dual-input {
-  display:flex;
+  display: flex;
   gap: 1rem;
 }

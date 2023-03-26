@@ -1,9 +1,10 @@
-import { computed, reactive, ref, watch } from "vue"
-import { defineStore } from "pinia"
-import { useStorage } from "@vueuse/core"
-import { useRouter } from "vue-router"
+import { computed, reactive, ref, watch } from 'vue'
+import { defineStore } from 'pinia'
+import { useStorage } from '@vueuse/core'
+import { useRouter } from 'vue-router'
 import { nanoid } from 'nanoid'
 import { useRoute } from 'vue-router'
+
 export const useClothes = defineStore('clothes', () => {
   const clothes_json = useStorage('clothes', [])
   const router = useRouter()
@@ -16,19 +17,19 @@ export const useClothes = defineStore('clothes', () => {
     name: '',
     cost: 1,
     forPerson: '',
-    perPcs:1,
-    type: 1,
+    perPcs: 1,
+    type: 1
   })
 
   async function storeClothes() {
     if (loading.value) {
       console.warn('Be patient....')
-      return 
+      return
     }
 
     loading.value = true
 
-    if(_validate()) {
+    if (_validate()) {
       return
     }
 
@@ -37,7 +38,7 @@ export const useClothes = defineStore('clothes', () => {
     clothes_json.value.push(json)
     loading.value = false
 
-    router.push({name: 'clothes.index'})
+    router.push({ name: 'clothes.index' })
   }
 
   function resetForm() {
@@ -47,7 +48,7 @@ export const useClothes = defineStore('clothes', () => {
     form.perPcs = 1
     form.type = 1
     search.value = ''
-    
+
     clothes_json.value = temp_json
   }
 
@@ -62,13 +63,13 @@ export const useClothes = defineStore('clothes', () => {
   function updateClothes(clothes_id) {
     if (loading.value) {
       console.warn('Be patient....')
-      return 
+      return
     }
 
     loading.value = true
 
     if (_validate()) {
-      return 
+      return
     }
 
     const json = _makeJson(true)
@@ -77,10 +78,10 @@ export const useClothes = defineStore('clothes', () => {
     if (index != -1) {
       clothes_json.value[index] = json
     }
-    
+
     loading.value = false
 
-    router.push({name: 'clothes.index'})
+    router.push({ name: 'clothes.index' })
   }
 
   function deleteClothes(clothes_id) {
@@ -88,11 +89,10 @@ export const useClothes = defineStore('clothes', () => {
 
     if (isYes) {
       const index = clothes.value.findIndex((item) => item.clothes_id === clothes_id)
-      if (index!=-1) {
-        clothes_json.value.splice(index,1)
+      if (index != -1) {
+        clothes_json.value.splice(index, 1)
       }
     }
-
   }
 
   function _getTypeName(type_num) {
@@ -119,20 +119,22 @@ export const useClothes = defineStore('clothes', () => {
       image: form.image,
       perPcs: form.perPcs,
       forPerson: form.forPerson,
-      cost_format: `${form.cost} ribu`, 
+      cost_format: `${form.cost} ribu`,
       description: `${form.cost} ribu / ${form.perPcs} pcs`,
       title: `${form.name} (${_getTypeName(form.type)}) ${form.forPerson}`
     }
 
-    data.clothes_id = isEdit ? route.params.clothes_id : nanoid(16); 
-    return JSON.stringify(data);
+    data.clothes_id = isEdit ? route.params.clothes_id : nanoid(16)
+    return JSON.stringify(data)
   }
 
   const clothes = computed(() => clothes_json.value.map((item) => JSON.parse(item)))
-
+  const tenClothes = computed(() => clothes.value.slice(0, 10))
   watch(search, (newv, oldv) => {
     if (newv.length > 0) {
-      clothes_json.value = clothes.value.filter((item) => item.title.indexOf(newv) != -1).map((item) => JSON.stringify(item))
+      clothes_json.value = clothes.value
+        .filter((item) => item.title.indexOf(newv) != -1)
+        .map((item) => JSON.stringify(item))
     } else {
       clothes_json.value = temp_json
     }
@@ -142,11 +144,12 @@ export const useClothes = defineStore('clothes', () => {
     form,
     clothes_json,
     clothes,
-    search, 
-    findClothes, 
-    storeClothes, 
-    resetForm, 
-    updateClothes, 
-    deleteClothes 
+    tenClothes,
+    search,
+    findClothes,
+    storeClothes,
+    resetForm,
+    updateClothes,
+    deleteClothes
   }
 })

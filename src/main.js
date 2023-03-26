@@ -3,6 +3,7 @@ import { createPinia } from 'pinia'
 
 import App from '@/App.vue'
 import router from '@/router'
+import MainLayout from '@/layouts/MainLayout.vue'
 
 import '@/assets/main.css'
 
@@ -15,7 +16,7 @@ import 'vuetify/dist/vuetify.min.css'
 
 const vuetify = createVuetify({
   components,
-  directives,
+  directives
 })
 
 const app = createApp(App)
@@ -23,4 +24,5 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(vuetify)
+app.component('MainLayout', MainLayout)
 app.mount('#app')

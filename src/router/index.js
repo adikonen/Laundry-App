@@ -17,6 +17,21 @@ const router = createRouter({
       path: '/clothes/:clothes_id/edit',
       name: 'clothes.edit',
       component: () => import('@/views/Clothes/EditView.vue')
+    },
+    {
+      path: '/bill',
+      name: 'bill.index',
+      component: () => import('@/views/Bill/IndexView.vue')
+    },
+    {
+      path: '/bill/create',
+      name: 'bill.create',
+      component: () => import('@/views/Bill/CreateView.vue')
+    },
+    {
+      path: '/bill/nextstep-create',
+      name: 'bill.nextstep-create',
+      component: () => import('@/views/Bill/NextStepCreateView.vue')
     }
   ]
 })
