@@ -1,6 +1,6 @@
 <script setup>
-import { useClothes } from '@/stores/clothes'
-const store = useClothes()
+import { useBill } from '@/stores/bill'
+const store = useBill()
 
 // onBeforeUnmount(store.resetForm)
 </script>
@@ -16,7 +16,7 @@ const store = useClothes()
         autofocus
       ></v-text-field>
       <RouterLink :to="{ name: 'bill.nextstep-create' }">
-        <v-btn value="Tambah Pakaian" class="full-btn" color="teal"> Selanjutnya </v-btn>
+        <v-btn @click="store.handleFirstStep()" value="Tambah Pakaian" class="full-btn mt-3" color="teal"> Selanjutnya </v-btn>
       </RouterLink>
     </v-form>
   </MainLayout>

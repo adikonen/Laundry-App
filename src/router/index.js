@@ -1,5 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+function doneFirstStepBill(to, from, next) {
+  // enter second step without fill first step
+  if (! localStorage.getItem('bill.forPerson')) {
+    return next({name: 'bill.create'})
+  }
+  
+  return next()
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -31,7 +40,18 @@ const router = createRouter({
     {
       path: '/bill/nextstep-create',
       name: 'bill.nextstep-create',
-      component: () => import('@/views/Bill/NextStepCreateView.vue')
+      component: () => import('@/views/Bill/NextStepCreateView.vue'),
+      beforeEnter: doneFirstStepBill
+    },
+    {
+      path: '/bill/:bill_id/show',
+      name: 'bill.show',
+      component: () => import('@/views/Bill/ShowView.vue')
+    },
+    {
+      path: '/bill/:bill_id/edit',
+      name: 'bill.edit',
+      component: () => import('@/views/Bill/EditView.vue')
     }
   ]
 })

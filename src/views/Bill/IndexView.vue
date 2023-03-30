@@ -7,6 +7,7 @@ const store = useBill()
 
 // onBeforeUnmount(store.resetForm)
 window.onbeforeunload = store.resetForm
+console.log(store.bills)
 </script>
 
 <template>
@@ -22,17 +23,16 @@ window.onbeforeunload = store.resetForm
       v-model="store.search"
       class="mt-2"
     ></v-text-field>
-    <v-list lines="two">
-      <!-- <template v-for="item in store.bill" :key="item.bill_id">
-        <v-list-item :title="item.title" :subtitle="item.description">
+    <template v-for="item in store.bills" :key="item.bill_id">
+      <v-list lines="two">
+        <v-list-item :title="item.forPerson" :subtitle="item.createdAt">
           <template v-slot:append>
-            <ThreeDot
-              @handle-delete="() => store.deleteBill(item.bill_id)"
-              :edit_link="{ name: 'bill.edit', params: { bill_id: item.bill_id } }"
-            ></ThreeDot>
+            <RouterLink :to="{ name: 'bill.show', params: {bill_id: item.bill_id} }">
+              <v-btn color="white">Detail</v-btn>
+            </RouterLink>
           </template>
         </v-list-item>
-      </template> -->
-    </v-list>
+      </v-list>
+    </template>
   </MainLayout>
 </template>

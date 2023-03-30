@@ -1,4 +1,4 @@
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch, watchEffect } from 'vue'
 import { defineStore } from 'pinia'
 import { useStorage } from '@vueuse/core'
 import { useRouter } from 'vue-router'
@@ -18,7 +18,8 @@ export const useClothes = defineStore('clothes', () => {
     cost: 1,
     forPerson: '',
     perPcs: 1,
-    type: 1
+    type: 1,
+    count:0
   })
 
   async function storeClothes() {
@@ -49,7 +50,11 @@ export const useClothes = defineStore('clothes', () => {
     form.type = 1
     search.value = ''
 
-    clothes_json.value = temp_json
+    if (localStorage.getItem('clothes')) {
+      clothes_json.value = temp_json
+    } else {
+      clothes_json.value = []
+    }
   }
 
   function findClothes(clothes_id) {
@@ -119,6 +124,7 @@ export const useClothes = defineStore('clothes', () => {
       image: form.image,
       perPcs: form.perPcs,
       forPerson: form.forPerson,
+      count: form.count,
       cost_format: `${form.cost} ribu`,
       description: `${form.cost} ribu / ${form.perPcs} pcs`,
       title: `${form.name} (${_getTypeName(form.type)}) ${form.forPerson}`
@@ -130,6 +136,8 @@ export const useClothes = defineStore('clothes', () => {
 
   const clothes = computed(() => clothes_json.value.map((item) => JSON.parse(item)))
   const tenClothes = computed(() => clothes.value.slice(0, 10))
+  
+  // search input handler
   watch(search, (newv, oldv) => {
     if (newv.length > 0) {
       clothes_json.value = clothes.value
